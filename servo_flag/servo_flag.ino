@@ -1,3 +1,6 @@
+char input;
+
+
 // motor one
 int motorOneP = 5;
 int motorOneN = 6;
@@ -22,14 +25,37 @@ digitalWrite(motorTwoN , HIGH);
 }
 
 void moveLeft(){
+    // motor one in the forward direction
 digitalWrite(motorOneP , HIGH);
 digitalWrite(motorOneN , LOW);
+
+// motor two in the back direction
+digitalWrite(motorTwoP , LOW);
+digitalWrite(motorTwoN , HIGH);
+
+
 }
 
 void moveRight(){
-digitalWrite(motorOneP , HIGH);
-digitalWrite(motorOneN , LOW);
+    // motor one in the back direction
+digitalWrite(motorOneP , LOW);
+digitalWrite(motorOneN , HIGH);
+
+// motor two in the forward direction
+digitalWrite(motorTwoP , HIGH);
+digitalWrite(motorTwoN , LOW);
 }
+
+void stopMoving(){
+// motor one in the stop 
+digitalWrite(motorOneP , LOW);
+digitalWrite(motorOneN , LOW);
+
+// motor two in the stop
+digitalWrite(motorTwoP , LOW);
+digitalWrite(motorTwoN , LOW);
+}
+
 
 void setup(){
 // pin number 5-8 motor pins 
@@ -39,25 +65,49 @@ void setup(){
 // white = 6; // m1 b
 // pink = 7; // m2 a
 // yellow = 8; // m2 b
+// tx = orange
+// rx = white
 
 // pin number 5-8 motor two pin
 pinMode(motorOneP , OUTPUT);
 pinMode(motorOneN , OUTPUT);
 pinMode(motorTwoP , OUTPUT);
 pinMode(motorTwoN , OUTPUT);
+
+// for the bt module
+Serial.begin(9600);
+
 }
 
 void loop(){
+if(Serial.available()){
+  input = Serial.read();
+  Serial.println(input);
+}
+
+
+if(input == 'F'){
 moveForward();
-delay(1000);
+Serial.println("Moving forward");
+}
 
+if(input == 'B'){
 moveBackward();
-delay(1000);
+Serial.println("Moving backward");
+}
 
-// moveLeft();
-// delay(1000);
+if(input == 'L'){
+moveLeft();
+Serial.println("Moving Left");
+}
 
-// moveRight();
-// delay(1000);
+if(input == 'R'){
+moveRight();
+Serial.println("Moving Right");
+}
 
+if(input == 'S'){
+stopMoving();
+Serial.println("Moving stopped");
+}
 }
